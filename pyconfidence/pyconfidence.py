@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
-# imports
+__author__ = "Jose Caballero"
+__email__ = "jcaballero@bnl.gov"
+
+
 import ConfigParser
 
 class PyConfig(ConfigParser.SafeConfigParser, object):
