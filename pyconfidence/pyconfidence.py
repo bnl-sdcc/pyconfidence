@@ -73,6 +73,9 @@ class PyConfig(ConfigParser.SafeConfigParser, object):
 
     def getlist(self, *k, **kw):
         """
+        similar to get(), but converts the value into a list of strings
+        One of the named parameters is the "splitter", to decide how to 
+        split the original value
         """
         splitter = kw.pop('splitter', ',')
         value = self.get(*k, **kw)
@@ -82,6 +85,9 @@ class PyConfig(ConfigParser.SafeConfigParser, object):
 
     def getlistint(self, *k, **kw):
         """
+        similar to getint(), but converts the value into a list of integers 
+        One of the named parameters is the "splitter", to decide how to 
+        split the original value
         """
         splitter = kw.pop('splitter', ',')
         value = self.get(*k, **kw)
@@ -91,6 +97,9 @@ class PyConfig(ConfigParser.SafeConfigParser, object):
 
     def getlistfloat(self, *k, **kw):
         """
+        similar to getfloat(), but converts the value into a list of floats 
+        One of the named parameters is the "splitter", to decide how to 
+        split the original value
         """
         splitter = kw.pop('splitter', ',')
         value = self.get(*k, **kw)
@@ -100,6 +109,9 @@ class PyConfig(ConfigParser.SafeConfigParser, object):
 
     def getlistboolean(self, *k, **kw):
         """
+        similar to getboolean(), but converts the value into a list of booleans 
+        One of the named parameters is the "splitter", to decide how to 
+        split the original value
         """
         splitter = kw.pop('splitter', ',')
         value = self.get(*k, **kw)
