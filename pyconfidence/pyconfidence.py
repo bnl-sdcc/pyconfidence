@@ -111,3 +111,66 @@ class PyConfig(ConfigParser.SafeConfigParser, object):
             value_l.append(self._boolean_states[token])
         return value_l
 
+
+    def merge(self, new_config, overridesection=False, overrideoption=False, includemissing=True):
+        """
+        :param new_config PyConfig: new config object being merged into the current one
+        :param overridesection boolean: determines if a common section should be replaced or merged
+        :param overrideoption boolean: determines if a common option should be replaced or merged
+        :param includemissing boolean: determines if new options should be added or not
+        """
+        new_section_l = new_config.sections()
+        for new_section in new_section_l:
+            if new_section not in self.sections():
+                self._clonesection(new_section, new_config)
+            else:
+                if overridesection:
+                    self._overridesection(new_section, new_config)
+                else:
+                    self._mergesection(new_section, new_config, overrideoption, includemissing)
+
+
+    def _clonesection(self, new_section, new_config):
+        """ 
+        create a new section, and copy its content 
+        :param new_section str: the section being cloned
+        :param new_config PyConfig: the PyConfig object source of the new section
+        """
+        self.add_section(new_section)
+        for opt in new_config.options(new_section):
+            value = new_config.get(new_section, opt, raw=True)
+            self.set(new_section, opt, value)
+
+
+    def _overridesection(self, new_section, new_config):
+        """ 
+        replace an existing section with a new one
+        :param new_section str: the section being cloned
+        :param new_config PyConfig: the PyConfig object source of the new section
+        """
+        self.remove_section(new_section)
+        self._clonesection(new_section, new_config)
+
+    
+    def _mergesection(self, new_section, new_config, overrideoption, includemissing):
+        """
+        merge the content of a current Config object section
+        with the content of the same section 
+        from a different Config object
+        :param new_section str: the section being merged
+        :param new_config PyConfig: config object with the new section
+        :param overrideoption boolean: determines if a common option should be replaced or merged
+        :param includemissing boolean: determines if new options should be added or not
+        """
+        option_l = self.options(new_section)
+        new_option_l = new_config.options(new_section)
+        for new_option in new_option_l:
+            value = new_config.get(new_section, new_option, raw=True)
+            if new_option in option_l:
+                if overrideoption:
+                    self.set(new_section, new_option, value)
+            else:
+                if includemissing:
+                    self.set(new_section, new_option, value)
+            
+
