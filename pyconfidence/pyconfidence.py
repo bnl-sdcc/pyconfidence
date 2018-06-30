@@ -4,9 +4,18 @@ __author__ = "Jose Caballero"
 __email__ = "jcaballero@bnl.gov"
 
 
+import logging
+import logging.handlers
 import ConfigParser
 
+
 class PyConfig(ConfigParser.SafeConfigParser, object):
+
+    def __init__(self, *k, **kw):
+        self.log = logging.getLogger('pyconfig')
+        self.log.addHandler(logging.NullHandler())
+        super(PyConfig, self).__init__(*k, **kw)
+
 
     def get(self, *k, **kw):
         """
